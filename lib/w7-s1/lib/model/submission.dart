@@ -13,9 +13,7 @@ class Answer {
 
 class Submission {
   final Map<Question, Answer> answers = {};
-
-
-
+  
   int getScore() {
     int score = 0;
     for (var answer in answers.values) {

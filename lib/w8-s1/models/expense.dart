@@ -1,25 +1,25 @@
-import 'package:uuid/uuid.dart';
+// import 'package:uuid/uuid.dart';
 
-enum ExpenseType { food, travel, leisure, work }
+// enum ExpenseType { food, travel, leisure, work }
 
-class Expense {
-  static Uuid uuid = const Uuid();
+// class Expense {
+//   static Uuid uuid = const Uuid();
 
-  final String id;
-  final String title;
-  final double amount;
-  final DateTime date;
-  final ExpenseType type;
+//   final String id;
+//   final String title;
+//   final double amount;
+//   final DateTime date;
+//   final ExpenseType type;
 
-  Expense({required this.type, 
-           required this.title, 
-           required this.amount, 
-           required this.date})
-      : id = uuid.v4();
-}
+//   Expense({required this.type, 
+//            required this.title, 
+//            required this.amount, 
+//            required this.date})
+//       : id = uuid.v4();
+// }
 
 
- main(){
+//  main(){
 
   
- }
+//  }
