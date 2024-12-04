@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment/w8-s2/5%20-%20Create%20Expense%20form/screens/expenses/expenses_form.dart';
-
+ 
 import '../../models/expense.dart';
+import 'expenses_form.dart';
 import 'expenses_list.dart';
 
 class Expenses extends StatefulWidget {
@@ -28,13 +28,26 @@ class _ExpensesState extends State<Expenses> {
       category: Category.leisure,
     ),
   ];
+
+
+  void onExpenseRemoved(Expense expense) {
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
+  }
+
+  void onExpenseCreated(Expense newExpense) {
+    setState(() {
+      _registeredExpenses.add(newExpense);
+    });
+  }
  
 
   void onAddPressed() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (ctx) => const ExpenseForm(),
+      builder: (ctx) => ExpenseForm(onCreated: onExpenseCreated,),
     );
   }
 
@@ -52,7 +65,7 @@ class _ExpensesState extends State<Expenses> {
         backgroundColor: Colors.blue[700],
         title: const Text('Ronan-The-Best Expenses App'),
       ),
-      body: ExpensesList(expenses: _registeredExpenses),
+      body: ExpensesList(expenses: _registeredExpenses, onExpenseRemoved: onExpenseRemoved,),
     );
   }
 }
