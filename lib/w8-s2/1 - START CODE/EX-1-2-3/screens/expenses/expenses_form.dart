@@ -16,6 +16,8 @@ class _ExpenseFormState extends State<ExpenseForm> {
   final _valueController = TextEditingController();
 
   String get title => _titleController.text;
+  Category selectedCategory = Category.food;
+  DateTime selectedDate = DateTime.now();
 
   @override
   void dispose() {
@@ -25,7 +27,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
   }
 
   void onCancel() {
-    
     // Close modal
     Navigator.pop(context);
   }
@@ -37,16 +38,30 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
     // 2- Create the expense
     Expense expense = Expense(
-        title: title,
-        amount: amount,
-        date: DateTime.now(),     //  TODO :  For now it s a fake data
-        category: Category.food); //  TODO :  For now it s a fake data
+      title: title,
+      amount: amount,
+      date: selectedDate,
+      category: selectedCategory,
+    );
 
     // 3- Ask the parent to add the expense
     widget.onCreated(expense);
 
     // 4- Close modal
     Navigator.pop(context);
+  }
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
   }
 
   @override
@@ -78,13 +93,49 @@ class _ExpenseFormState extends State<ExpenseForm> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(onPressed: onCancel, child: const Text('Cancel')),
+              DropdownButton<Category>(
+                value: selectedCategory,
+                onChanged: (Category? newValue) {
+                  setState(() {
+                    selectedCategory = newValue!;
+                  });
+                },
+                items: Category.values
+                    .map<DropdownMenuItem<Category>>((Category category) {
+                  return DropdownMenuItem<Category>(
+                    value: category,
+                    child: Row(
+                      children: [
+                        Icon(category.icon),
+                        const SizedBox(width: 8),
+                        Text(category.name),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
               const SizedBox(
                 width: 20,
               ),
-              ElevatedButton(onPressed: onAdd, child: const Text('Create')),
+              Text("${selectedDate.toLocal()}".split(' ')[0]),
+              const SizedBox(
+                height: 20.0,
+              ),
+              ElevatedButton(
+                onPressed: () => _selectDate(context),
+                child: const Row(
+                  children: [
+                    Icon(Icons.calendar_today),
+                    Text('Select date'),
+                  ],
+                ),
+              ),
             ],
-          )
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(onPressed: onCancel, child: const Text('Cancel')),
+          const SizedBox(height: 10),
+          ElevatedButton(onPressed: onAdd, child: const Text('Create')),
         ],
       ),
     );
